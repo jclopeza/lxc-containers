@@ -24,7 +24,7 @@ Para que los cambio surtan efecto, hay que hacer logout y login.
 ## Inicialización del entorno lxd
 Ya tenemos el servidor iniciado, ahora necistamos iniciar el entorno lxd.
 ```
-$ xld init
+$ lxd init
 ```
 Todas las opciones las dejamos por defecto excepto el `storage backend` que lo cambiamos a `dir`:
 ```
