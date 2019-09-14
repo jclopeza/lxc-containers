@@ -359,3 +359,27 @@ PING myubuntu2.lxd (10.21.211.193) 56(84) bytes of data.
 4 packets transmitted, 4 received, 0% packet loss, time 3058ms
 rtt min/avg/max/mdev = 0.097/0.105/0.122/0.012 ms
 ```
+
+# Setup K8s con contenedores lxc
+
+## Creación de profile para K8s
+Creamos un nuevo profile para K8s e incluimos las siguientes líneas bajo config:
+```
+  limits.cpu: "2"
+  limits.memory: 2GB
+  limits.memory.swap: "false"
+  linux.kernel_modules: ip_tables,ip6_tables,netlink_diag,nf_nat,overlay
+  raw.lxc: "lxc.apparmor.profile=unconfined\nlxc.cap.drop= \nlxc.cgroup.devices.allow=a\nlxc.mount.auto=proc:rw
+    sys:rw"
+  security.privileged: "true"
+  security.nesting: "true"
+```
+Los contenedores linux lxc que vamos a crear como kmaster y kworker, deberán poder crear otros contenedores en su interior. Es por esto que creamos un nuevo profile con ciertos privilegios.
+
+## Creación del kmaster y los kworkers
+```
+$ lxc launch images:centos/7 kmaster --profile k8s
+$ lxc launch images:centos/7 kworker1 --profile k8s
+$ lxc launch images:centos/7 kworker2 --profile k8s
+$ lxc launch images:centos/7 kworker3 --profile k8s
+```
